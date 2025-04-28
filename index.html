@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title Forge - Advanced</title>
+    <style>
+        :root {
+            --cyber-gray: #27272a;
+            --cyber-text: #e4e4e7;
+            --cyber-neon: #00ffcc; /* Using a similar bright color */
+            --cyber-primary: #9f7aea; /* Purple accent */
+            --cyber-primary-hover: #7c5ea6;
+            --cyber-green: #22c55e;
+            --cyber-green-hover: #1e9c4f;
+            --cyber-background: #18181b;
+            --cyber-card-bg: #18181b;
+            --cyber-border: #3f3f46;
+            --cyber-input-bg: #18181b;
+            --cyber-error-bg: rgba(255, 68, 44, 0.1);
+            --cyber-error-text: #ff4444;
+        }
+
+        /* Using JetBrains Mono or a fallback sans-serif */
+        body {
+            font-family: 'JetBrains Mono', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--cyber-background);
+            color: var(--cyber-text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box; /* Include padding in width calculation */
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 4rem); /* Responsive font size */
+            font-weight: bold;
+            background: linear-gradient(to right, var(--cyber-primary), var(--cyber-neon));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 24px;
+            animation: pulse 2s infinite;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; }
+            100% { opacity: 0.8; }
+        }
+
+        .card {
+            width: 100%;
+            max-width: 640px;
+            background-color: var(--cyber-card-bg);
+            border: 1px solid var(--cyber-border);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: clamp(1.5rem, 4vw, 2rem); /* Responsive font size */
+            color: var(--cyber-neon);
+            margin-bottom: 10px;
+        }
+
+        .card-description {
+            color: #a1a1aa; /* Slightly lighter gray */
+        }
+
+        .card-content {
+            display: grid;
+            gap: 16px;
+        }
+
+        .label {
+            color: var(--cyber-neon);
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+        }
+        .label .value-display { /* Style for the value span next to slider labels */
+             color: var(--cyber-text);
+             font-weight: normal;
+        }
+
+        .input, .select, .textarea { /* Added textarea */
+            width: 100%;
+            padding: 12px; /* Slightly larger padding */
+            border: 1px solid var(--cyber-border);
+            border-radius: 4px;
+            background-color: var(--cyber-input-bg);
+            color: var(--cyber-text);
+            font-size: 1rem;
+            box-sizing: border-box; /* Important for width: 100% */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .textarea { /* Specific textarea styles */
+            min-height: 80px; /* Smaller default height */
+            resize: vertical;
+            font-family: inherit; /* Ensure consistent font */
+        }
+
+        .input:focus, .select:focus, .textarea:focus {
+            outline: none;
+            border-color: var(--cyber-primary);
+            box-shadow: 0 0 0 2px var(--cyber-primary);
+        }
+        .input::placeholder, .textarea::placeholder { /* Added textarea placeholder */
+            color: #52525b; /* Darker placeholder */
+        }
+
+        /* Slider Styles */
+         .slider-container { /* Optional container if needed */
+            display: grid;
+            gap: 8px; /* Space between label and slider */
+        }
+        .slider {
+          width: 100%;
+          height: 5px;
+          background: var(--cyber-border);
+          -webkit-appearance: none;
+           appearance: none; /* Add standard property */
+          border-radius: 5px;
+          outline: none;
+          cursor: pointer;
+           transition: background 0.2s;
+        }
+        .slider:hover {
+            background: #52525b; /* Slightly lighter on hover */
+        }
+        /* Webkit (Chrome, Safari) Thumb */
+        .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 16px; /* Slightly larger thumb */
+          height: 16px;
+          border-radius: 50%;
+          background: var(--cyber-primary);
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        .slider::-webkit-slider-thumb:hover {
+            background: var(--cyber-primary-hover);
+        }
+         /* Mozilla (Firefox) Thumb */
+        .slider::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--cyber-primary);
+            cursor: pointer;
+            border: none; /* Remove default border */
+            transition: background 0.2s;
+        }
+         .slider::-moz-range-thumb:hover {
+             background: var(--cyber-primary-hover);
+         }
+
+
+        .button {
+            background-color: var(--cyber-primary);
+            color: white;
+            border: none;
+            padding: 12px 20px; /* Consistent padding */
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center text/icon */
+            gap: 8px; /* Increased gap */
+            font-size: 1rem;
+            font-weight: 600; /* Bolder text */
+            width: 100%; /* Make button full width */
+            box-sizing: border-box;
+        }
+
+        .button:hover:not(:disabled) {
+            background-color: var(--cyber-primary-hover);
+        }
+        .button:disabled {
+            background-color: var(--cyber-gray);
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .button.green {
+          background-color: var(--cyber-green);
+        }
+        .button.green:hover:not(:disabled) {
+          background-color: var(--cyber-green-hover);
+        }
+
+        .select {
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e4e4e7' d='M6 8.586l-4-4 1.414-1.414L6 5.758l2.586-2.586L10 4.586z'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 10px center;
+          padding-right: 30px; /* Space for arrow */
+        }
+        .select option {
+          background-color: var(--cyber-background); /* Darker background for options */
+          color: var(--cyber-text);
+        }
+
+        /* Output Area Styling */
+        .cyber-card {
+          width: 100%;
+          max-width: 800px; /* Wider output card */
+          margin-top: 30px;
+          background-color: var(--cyber-card-bg);
+          border: 1px solid var(--cyber-border);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+          padding: 20px;
+          border-radius: 8px;
+        }
+        .title-header {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            gap: 1rem; /* Add gap between title and buttons */
+        }
+         .title-header h2 {
+             color: var(--cyber-neon);
+             margin: 0; /* Remove default margin */
+             font-size: clamp(1.3rem, 3vw, 1.7rem); /* Responsive */
+         }
+
+        .button-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .button-group .button {
+            width: auto; /* Allow buttons to size naturally */
+            padding: 8px 16px; /* Smaller padding for action buttons */
+            font-size: 0.9rem;
+        }
+
+
+        .info-banner {
+            background: rgba(10, 10, 20, 0.5);
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem; /* Increased gap */
+            color: #a1a1aa;
+            font-size: 0.9rem;
+        }
+        .info-banner svg {
+          color: var(--cyber-primary); /* Match accent color */
+          flex-shrink: 0; /* Prevent icon shrinking */
+        }
+
+        .title-list {
+          list-style: none;
+          padding: 0;
+          margin: 0; /* Remove default margins */
+        }
+        .title-list li {
+          border-left: 4px solid var(--cyber-gray);
+          padding: 1rem;
+          margin-bottom: 0.75rem;
+          position: relative;
+          transition: all 0.3s ease;
+          background-color: rgba(255, 255, 255, 0.02); /* Subtle background */
+          border-radius: 0 4px 4px 0; /* Rounded corners */
+        }
+        .title-list li:hover {
+            border-left-color: var(--cyber-neon);
+            background-color: rgba(0, 255, 204, 0.05); /* Neon highlight on hover */
+        }
+
+        .list-item-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start; /* Align items to the top */
+            gap: 1rem;
+        }
+
+        .title-text {
+            flex-grow: 1; /* Allow text to take available space */
+            word-break: break-word; /* Prevent long titles overflowing */
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .copy-button {
+            background: transparent;
+            border: none;
+            color: var(--cyber-text);
+            opacity: 0.6; /* Slightly less prominent */
+            cursor: pointer;
+            padding: 0.25rem;
+            transition: all 0.3s ease;
+            flex-shrink: 0; /* Prevent button shrinking */
+        }
+        .copy-button:hover {
+          opacity: 1;
+          color: var(--cyber-neon); /* Neon color on hover */
+        }
+        .copy-button svg {
+            width: 18px; /* Slightly smaller icon */
+            height: 18px;
+            display: block; /* Prevents extra space below icon */
+        }
+
+        .error-message {
+            color: var(--cyber-error-text);
+            background-color: var(--cyber-error-bg);
+            padding: 1rem;
+            border-radius: 4px;
+            border: 1px solid var(--cyber-error-text);
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        /* Animation for spinner */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .card, .cyber-card {
+                padding: 15px;
+            }
+            .title-header {
+                flex-direction: column; /* Stack title and buttons */
+                align-items: flex-start;
+            }
+             .button-group {
+                width: 100%; /* Make button group full width */
+             }
+            .button-group .button {
+                 flex-grow: 1; /* Make buttons share width */
+            }
+            .list-item-content {
+                flex-direction: column; /* Stack text and copy button */
+                align-items: flex-start;
+            }
+            .copy-button {
+                align-self: flex-end; /* Move copy button to the right */
+                margin-top: 0.5rem; /* Add space above copy button */
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1>Title Forge - Advanced</h1>
+
+    <!-- Input Card -->
+    <div class="card">
+        <div class="card-header">
+            <h2 class="card-title">Generate Titles</h2>
+            <p class="card-description">Fill in the details below to generate compelling titles.</p>
+        </div>
+        <div class="card-content">
+            <!-- Topic Input -->
+            <div>
+                <label for="topic" class="label">Main Topic *</label>
+                <input type="text" id="topic" class="input" placeholder="E.g., AI in Agriculture, Content Marketing Tips" required>
+            </div>
+
+            <!-- Usage Select (from original title_gen.html) -->
+            <div>
+              <label for="usage" class="label">Content Type / Usage *</label>
+              <select id="usage" class="select" required>
+                  <option value="Blog">Blog Post</option>
+                  <option value="YouTube">YouTube Video</option>
+                  <option value="Social Media">Social Media Post</option>
+                  <option value="Landing Page">Landing Page Headline</option>
+                  <option value="Email Subject">Email Subject Line</option>
+                  <option value="Ad Copy">Ad Copy Headline</option>
+              </select>
+            </div>
+
+             <!-- Tone Select -->
+            <div>
+              <label for="tone" class="label">Tone</label>
+              <select id="tone" class="select">
+                  <option value="">Default / Auto</option> {/* Changed default value to empty string */}
+                  <option value="Professional">Professional</option>
+                  <option value="Edgy">Edgy</option>
+                  <option value="Conversational">Conversational</option>
+                  <option value="Friendly">Friendly</option>
+                  <option value="Humorous">Humorous</option>
+                  <option value="Academic">Academic</option>
+                  <option value="Formal">Formal</option>
+                  <option value="Informal">Informal</option>
+                  <option value="Optimistic">Optimistic</option>
+                  <option value="Pessimistic">Pessimistic</option>
+                  <option value="Sarcastic">Sarcastic</option>
+                  <option value="Candid">Candid</option>
+                  <option value="Encouraging">Encouraging</option>
+                  <option value="Empathetic">Empathetic</option>
+                  <option value="Passionate">Passionate</option>
+                  <option value="Authoritative">Authoritative</option>
+                  <option value="Creative">Creative</option>
+                  <option value="Intriguing">Intriguing</option>
+                  <option value="Urgent">Urgent</option>
+              </select>
+            </div>
+
+            <!-- Audience Select -->
+            <div>
+              <label for="audience" class="label">Target Audience</label>
+              <select id="audience" class="select">
+                  <option value="">Default / General</option> {/* Changed default value to empty string */}
+                  <option value="General Public">General Public</option>
+                  <option value="Technical Experts">Technical Experts</option>
+                  <option value="Students">Students</option>
+                  <option value="Beginners">Beginners</option>
+                  <option value="Industry Professionals">Industry Professionals</option>
+                  <option value="Executives/Managers">Executives/Managers</option>
+                  <option value="Researchers/Academics">Researchers/Academics</option>
+                  <option value="Consumers/Customers">Consumers/Customers</option>
+                  <option value="Marketing Professionals">Marketing Professionals</option>
+                  <option value="Software Developers">Software Developers</option>
+                  <option value="Designers">Designers</option>
+                  <option value="Educators">Educators</option>
+                  <option value="Scientists">Scientists</option>
+                  <option value="Healthcare Professionals">Healthcare Professionals</option>
+                  <option value="Financial Analysts">Financial Analysts</option>
+                  <option value="Small Business Owners">Small Business Owners</option>
+                  <option value="Parents">Parents</option>
+              </select>
+            </div>
+
+            <!-- Keywords Textarea -->
+            <div>
+                <label for="keywords" class="label">Keywords (Optional)</label>
+                <textarea id="keywords" class="textarea" placeholder="Enter comma-separated keywords, e.g., sustainable farming, crop yield, IoT"></textarea>
+            </div>
+
+             <!-- Quantity Slider -->
+             <div class="slider-container">
+              <label for="quantity" class="label">Number of Titles: <span id="quantityValue" class="value-display">10</span></label>
+              <input type="range" id="quantity" class="slider" min="3" max="25" value="10">
+            </div>
+
+            <!-- Character Limit Slider -->
+            <div class="slider-container">
+              <label for="characterLimit" class="label">Max Length (chars): <span id="characterLimitValue" class="value-display">70</span></label>
+              <input type="range" id="characterLimit" class="slider" min="30" max="120" value="70">
+            </div>
+
+            <!-- Generate Button -->
+            <button class="button" id="generateButton">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="m15 13-3-3-3 3"/><path d="M12 16V10"/></svg>
+                <span>Generate Titles</span>
+            </button>
+
+            <!-- Error Message Area -->
+             <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </div>
+
+    <!-- Output Card -->
+    <div class="cyber-card" id="titlesResult" style="display:none">
+      <div class="title-header">
+        <h2>Generated Titles</h2>
+        <div class="button-group">
+          <button class="button green" id="copyAllTitlesButton">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"></path></svg>
+              <span>Copy All</span>
+          </button>
+        </div>
+      </div>
+      <div class="info-banner">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18h.01"/><path d="M11.95 14l.05.05L12 14.05l.05-.05L12.05 14l-.05-.05L12 13.95l-.05.05L11.95 14Z"/><path d="M7 4.8a9 9 0 0 1 10 0"/><path d="M5 7.5a13.8 13.8 0 0 1 14 0"/><path d="M3 10.2a18.8 18.8 0 0 1 18 0"/></svg>
+        <span>Click individual copy icon <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline; vertical-align: middle;"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"></path></svg> next to a title to copy it.</span>
+      </div>
+      <ul class="title-list" id="titleList">
+        <!-- Generated titles will be added here -->
+      </ul>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          // --- Get Input Elements ---
+          const topicInput = document.getElementById('topic');
+          const usageSelect = document.getElementById('usage');
+          const toneSelect = document.getElementById('tone');
+          const audienceSelect = document.getElementById('audience');
+          const keywordsTextarea = document.getElementById('keywords');
+          const quantitySlider = document.getElementById('quantity');
+          const quantityValue = document.getElementById('quantityValue');
+          const characterLimitSlider = document.getElementById('characterLimit');
+          const characterLimitValue = document.getElementById('characterLimitValue');
+          const generateButton = document.getElementById('generateButton');
+          const errorMessageDiv = document.getElementById('errorMessage');
+
+          // --- Get Output Elements ---
+          const titlesResultDiv = document.getElementById('titlesResult');
+          const titleList = document.getElementById('titleList');
+          const copyAllTitlesButton = document.getElementById('copyAllTitlesButton');
+
+          // --- Configuration ---
+          const WORDPRESS_SITE_URL = 'https://test.jummaai.com'; // IMPORTANT: Replace with your actual WordPress site URL
+          const WORDPRESS_AJAX_ACTION = 'openai_generate_title'; // Replace if your action name is different
+          // ---------------------
+
+          // --- Button/Icon SVGs ---
+          const generateIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"/><path d="m15 13-3-3-3 3"/><path d="M12 16V10"/></svg> <span>Generate Titles</span>`;
+          const generatingIconSVG = `<svg class="animate-spin" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> <span>Generating...</span>`;
+          const copyIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2v2"></path></svg>`;
+          const copiedIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`;
+
+
+          // --- Event Listeners for Sliders ---
+          quantitySlider.addEventListener('input', () => {
+              quantityValue.textContent = quantitySlider.value;
+          });
+          characterLimitSlider.addEventListener('input', () => {
+              characterLimitValue.textContent = characterLimitSlider.value;
+          });
+
+
+          // --- Helper Functions ---
+          function showError(message) {
+              errorMessageDiv.textContent = message;
+              errorMessageDiv.style.display = 'block';
+              titlesResultDiv.style.display = 'none';
+          }
+
+          function hideError() {
+              errorMessageDiv.style.display = 'none';
+          }
+
+          async function handleApiResponse(response) {
+              if (!response.ok) {
+                  throw new Error(`Network response was not ok: ${response.status} ${response.statusText}`);
+              }
+              const text = await response.text();
+              if (!text && response.status === 200) { // Allow empty 200 for potential future cases, but usually error for titles
+                  console.warn("Received empty but successful (200) response from server.");
+                  return ""; // Return empty string, might need handling later
+              }
+              if (!text) {
+                   throw new Error('Empty response received from server');
+              }
+              try {
+                  const jsonData = JSON.parse(text);
+                  if (jsonData.success === false) {
+                      throw new Error(jsonData.data || 'WordPress AJAX action returned an error');
+                  }
+                  return jsonData.data || text; // Prefer data field if it exists
+              } catch (e) {
+                  // Not JSON or not WP error format, assume raw text
+                  return text;
+              }
+          }
+
+          function addCopyListeners() {
+             const copyButtons = titleList.querySelectorAll('.copy-button');
+             copyButtons.forEach(button => {
+                 button.replaceWith(button.cloneNode(true)); // Replace to remove old listeners
+             });
+             titleList.querySelectorAll('.copy-button').forEach(button => { // Add listener to new buttons
+                 button.addEventListener('click', async () => {
+                     const title = button.getAttribute('data-title');
+                     try {
+                         await navigator.clipboard.writeText(title);
+                         button.innerHTML = copiedIconSVG;
+                         button.disabled = true;
+                         setTimeout(() => {
+                             button.innerHTML = copyIconSVG;
+                             button.disabled = false;
+                         }, 2000);
+                     } catch (err) {
+                         console.error('Failed to copy title:', err);
+                         alert('Failed to copy title to clipboard.');
+                     }
+                 });
+             });
+          }
+
+
+          // --- Generate Button Click Handler ---
+          generateButton.addEventListener('click', async () => {
+              hideError();
+              const topic = topicInput.value.trim();
+              const usage = usageSelect.value;
+
+              // --- Get values from ALL inputs ---
+              const tone = toneSelect.value;
+              const audience = audienceSelect.value;
+              const keywords = keywordsTextarea.value.trim();
+              const quantity = quantitySlider.value;
+              const characterLimit = characterLimitSlider.value;
+              // ---------------------------------
+
+              if (!topic) {
+                  showError("Please enter a main topic.");
+                  topicInput.focus(); // Focus the topic input
+                  return;
+              }
+               if (!usage) { // Also check usage as it's required
+                  showError("Please select a content type/usage.");
+                  usageSelect.focus();
+                  return;
+              }
+
+
+              generateButton.disabled = true;
+              generateButton.innerHTML = generatingIconSVG;
+              titlesResultDiv.style.display = 'none';
+              titleList.innerHTML = '';
+
+              // --- Prepare data for sending ---
+              const requestData = new URLSearchParams({
+                  action: WORDPRESS_AJAX_ACTION,
+                  topic: topic,
+                  usage: usage
+                  // ========================================================
+                  // === TODO: ADD OTHER PARAMETERS HERE LATER ===
+                  // === Once the backend is updated, uncomment and add: ===
+                  // , tone: tone,
+                  // , audience: audience,
+                  // , keywords: keywords,
+                  // , quantity: quantity,
+                  // , character_limit: characterLimit // Use snake_case if PHP expects it
+                  // ========================================================
+              });
+              // --------------------------------
+
+              try {
+                  const response = await fetch(`${WORDPRESS_SITE_URL}/wp-admin/admin-ajax.php`, {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded',
+                      },
+                      body: requestData // Send the prepared data
+                  });
+
+                  const titlesText = await handleApiResponse(response);
+
+                  // Handle potentially empty but successful response
+                  if (titlesText === "") {
+                      showError("Received an empty response from the server. No titles generated.");
+                      return;
+                  }
+
+                  const titlesArray = titlesText.split('\n').map(t => t.trim()).filter(t => t);
+
+                  if (titlesArray.length === 0) {
+                      showError("No valid titles found in the server response.");
+                      return;
+                  }
+
+                  titlesResultDiv.style.display = 'block';
+                  titlesArray.forEach((title) => {
+                      const li = document.createElement('li');
+                      // Basic sanitization for display, more robust needed if user input is complex
+                      const sanitizedTitle = title.replace(/</g, "<").replace(/>/g, ">");
+                      // Store the *original* title for copying
+                      const originalTitle = title.replace(/"/g, '"'); // Escape quotes for attribute
+
+                      li.innerHTML = `
+                        <div class="list-item-content">
+                            <div class="title-text">${sanitizedTitle}</div>
+                            <button class="copy-button" aria-label="Copy title" data-title="${originalTitle}">
+                              ${copyIconSVG}
+                            </button>
+                        </div>
+                      `;
+                      titleList.appendChild(li);
+                  });
+
+                  addCopyListeners();
+
+              } catch (error) {
+                  console.error('Error during title generation:', error);
+                  showError(`Error: ${error.message}`);
+              } finally {
+                  generateButton.disabled = false;
+                  generateButton.innerHTML = generateIconSVG;
+              }
+          });
+
+          // --- Copy All Titles Button Handler ---
+          copyAllTitlesButton.addEventListener('click', async () => {
+            // Get titles directly from the data-title attribute for accuracy
+            const titles = Array.from(titleList.querySelectorAll('.copy-button'))
+                                .map(button => button.getAttribute('data-title'))
+                                .join('\n');
+            if (!titles) {
+              alert('Nothing to copy. Generate titles first.');
+              return;
+            }
+            try {
+              await navigator.clipboard.writeText(titles);
+              const originalHTML = copyAllTitlesButton.innerHTML; // Store original HTML
+              copyAllTitlesButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg> <span>Copied!</span>`;
+              copyAllTitlesButton.disabled = true;
+              setTimeout(() => {
+                copyAllTitlesButton.innerHTML = originalHTML; // Restore original HTML
+                 copyAllTitlesButton.disabled = false;
+              }, 2000);
+            } catch (err) {
+              console.error('Failed to copy all titles:', err);
+              alert('Failed to copy all titles to clipboard.');
+            }
+          });
+
+        });
+    </script>
+</body>
+</html>
